@@ -3,6 +3,7 @@ package com.flavorburst.writetest2;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,12 +34,16 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "Write Test";
     private Button btWriteTimestamp;
+    private TextView textView;
     protected final int REQUEST_PERMISSIONS_CODE = 225;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        textView = findViewById(R.id.textView);
+        textView.setTextColor(getResources().getColor(R.color.blue));
 
         btWriteTimestamp = findViewById(R.id.btRecordTimestamp);
         btWriteTimestamp.setOnClickListener(new View.OnClickListener() {
@@ -94,11 +100,16 @@ public class MainActivity extends AppCompatActivity {
                 outputStream.close();
 
                 log("Wrote " + compiledError + " to " + filename);
+                textView.setTextColor(getResources().getColor(R.color.green));
+                textView.setText("Success");
             } catch (IOException e) {
                 log("Unable to write to LogFile");
+                textView.setTextColor(getResources().getColor(R.color.red));
+                textView.setText("Not successful");
                 e.printStackTrace();
             } catch (Exception e) {
-
+                textView.setTextColor(getResources().getColor(R.color.red));
+                textView.setText("Not Successful");
                 e.printStackTrace();
             }
         }
