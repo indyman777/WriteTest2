@@ -1,34 +1,35 @@
 package com.flavorburst.writetest2;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.storage.StorageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.os.EnvironmentCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+        import android.Manifest;
+        import android.content.Context;
+        import android.content.pm.PackageManager;
+        import android.graphics.Color;
+        import android.os.Build;
+        import android.os.Bundle;
+        import android.os.Environment;
+        import android.os.storage.StorageManager;
+        import android.support.v4.app.ActivityCompat;
+        import android.support.v4.content.ContextCompat;
+        import android.support.v4.os.EnvironmentCompat;
+        import android.support.v7.app.AppCompatActivity;
+        import android.util.Log;
+        import android.view.View;
+        import android.widget.Button;
+        import android.widget.TextView;
+        import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+        import java.io.File;
+        import java.io.FileOutputStream;
+        import java.io.IOException;
+        import java.io.InputStream;
+        import java.lang.reflect.Array;
+        import java.lang.reflect.InvocationTargetException;
+        import java.lang.reflect.Method;
+        import java.text.SimpleDateFormat;
+        import java.util.ArrayList;
+        import java.util.Calendar;
+        import java.util.GregorianCalendar;
+        import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,40 +80,75 @@ public class MainActivity extends AppCompatActivity {
 
         String filename = "LogFile.txt";
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
-        Calendar calendar = new GregorianCalendar();
-        String currentDateandTime = sdf.format(calendar.getTime());
+        String path = getUSBStoragePath(this, true);
+        File file = new File(path, filename);
+        try {
+            /* 获取File对象，确定数据文件的信息 */
+            //File file  = new File(Environment.getExternalStorageDirectory()+"/f.txt");
+//            File file = new File(path/*Environment.getExternalStorageDirectory()*/, "鑫中宏.txt");
+            Log.i("TAG", "writeDataToUsb: file=========="+file);
+            /* 判断USB的外部设置状态是否可以读写 */
+            //if (path.equals(Environment.MEDIA_MOUNTED)) {
+            Log.i("TAG", "writeDataToUsb: path2=========="+path);
+            /* 流的对象 *//*  */
+            FileOutputStream fos = new FileOutputStream(file);
+            Log.i("TAG", "writeDataToUsb: path3=========="+fos);
 
-        String compiledError = currentDateandTime + "\n\n";
+            /* 需要写入的数据 */
+            String message = "Success！！！";
 
-        // for USB testing
-        String usbPath = getUSBStoragePath(this, true);
+            /* 将字符串转换成字节数组 */
+            byte[] buffer = message.getBytes();
 
-        if (usbPath != null) {
-            log("external USB storage available : " + usbPath + File.separator +  filename);
-            File file = new File(usbPath + File.separator + filename);
+            /* 开始写入数据 */
+            fos.write(buffer);
 
-            try {
-                // Used for recording only one entry
-                if (file.exists()) file.delete();
-                FileOutputStream outputStream = new FileOutputStream(file);
-                outputStream.write(compiledError.getBytes());
-                outputStream.close();
+            /* 关闭流的使用 */
+            fos.close();
+            Toast.makeText(this, "Success", Toast.LENGTH_LONG).show();
+            //}
 
-                log("Wrote " + compiledError + " to " + filename);
-                textView.setTextColor(getResources().getColor(R.color.green));
-                textView.setText("Success");
-            } catch (IOException e) {
-                log("Unable to write to LogFile");
-                textView.setTextColor(getResources().getColor(R.color.red));
-                textView.setText("Not successful");
-                e.printStackTrace();
-            } catch (Exception e) {
-                textView.setTextColor(getResources().getColor(R.color.red));
-                textView.setText("Not Successful");
-                e.printStackTrace();
-            }
+        } catch (Exception ex) {
+            Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
         }
+
+
+
+
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");
+//        Calendar calendar = new GregorianCalendar();
+//        String currentDateandTime = sdf.format(calendar.getTime());
+//
+//        String compiledError = currentDateandTime + "\n\n";
+//
+//        // for USB testing
+//        String usbPath = getUSBStoragePath(this, true);
+//
+//        if (usbPath != null) {
+//            log("external USB storage available : " + usbPath + File.separator +  filename);
+//            File file = new File(usbPath + File.separator + filename);
+//
+//            try {
+//                // Used for recording only one entry
+//                if (file.exists()) file.delete();
+//                FileOutputStream outputStream = new FileOutputStream(file);
+//                outputStream.write(compiledError.getBytes());
+//                outputStream.close();
+//
+//                log("Wrote " + compiledError + " to " + filename);
+//                textView.setTextColor(getResources().getColor(R.color.green));
+//                textView.setText("Success");
+//            } catch (IOException e) {
+//                log("Unable to write to LogFile");
+//                textView.setTextColor(getResources().getColor(R.color.red));
+//                textView.setText("Not successful");
+//                e.printStackTrace();
+//            } catch (Exception e) {
+//                textView.setTextColor(getResources().getColor(R.color.red));
+//                textView.setText("Not Successful");
+//                e.printStackTrace();
+//            }
+//        }
 
 
         // for microSD testing
@@ -239,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
 //        return storageDirectories;
 //    }
 
-    protected static String getUSBStoragePath(Context mContext, boolean is_removable) {
+    protected static String getUSBStoragePath(Context mContext, boolean is_removale) {
 
         if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) return "mnt/udisk";
 
@@ -257,10 +293,8 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < length; i++) {
                     Object storageVolumeElement = Array.get(result, i);
                     String path = (String) getPath.invoke(storageVolumeElement);
-                    Log.i("TAG", "getStoragePath: =====" + path + ", removable? " + String.valueOf(isRemovable.invoke(storageVolumeElement)));//path获取路径自行判断
                     boolean removable = (Boolean) isRemovable.invoke(storageVolumeElement);
-                    if (is_removable == removable) {
-                        Log.i("TAG", "Returning " + path);
+                    if (is_removale == removable) {
                         return path;
                     }
                 }

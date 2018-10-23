@@ -21,6 +21,13 @@
                     android:pathPattern="/.*"
                     android:scheme="https" />
             </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".UsbReadAndWriteActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
